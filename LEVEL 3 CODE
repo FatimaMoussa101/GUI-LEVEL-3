@@ -1,0 +1,123 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Main {
+    private JFrame startFrame;
+    private JFrame instructionsFrame;
+    private JFrame gameFrame;
+
+    public void GameIntroduction() {
+        createStartScreen();
+    }
+
+    private void createStartScreen() {
+        startFrame = new JFrame("Game Introduction");
+        startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(3, 1));
+
+        JButton instructionsButton = new JButton("Instructions");
+        instructionsButton.addActionListener(new InstructionsButtonListener());
+        panel.add(instructionsButton);
+
+        JButton playButton = new JButton("Play");
+        playButton.addActionListener(new PlayButtonListener());
+        panel.add(playButton);
+
+        JButton quitButton = new JButton("Quit");
+        quitButton.addActionListener(new QuitButtonListener());
+        panel.add(quitButton);
+
+        startFrame.getContentPane().add(panel);
+        startFrame.pack();
+        startFrame.setVisible(true);
+    }
+
+    private void createInstructionsScreen() {
+        instructionsFrame = new JFrame("Instructions");
+        instructionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2, 1));
+
+        JLabel instructionsLabel = new JLabel("Instructions: \n\n" +
+                "These are the instructions for the game. \n" +
+                "You can provide any relevant information here.");
+        panel.add(instructionsLabel);
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new BackButtonListener());
+        panel.add(backButton);
+
+        instructionsFrame.getContentPane().add(panel);
+        instructionsFrame.pack();
+        instructionsFrame.setVisible(true);
+    }
+
+    private void createGameScreen() {
+        gameFrame = new JFrame("Game");
+        gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+
+        // Adding a label with an image representing the game
+        ImageIcon gameImage = new ImageIcon("game_image.png");
+        JLabel gameLabel = new JLabel(gameImage);
+        panel.add(gameLabel);
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new BackButtonListener());
+        panel.add(backButton);
+
+        gameFrame.getContentPane().add(panel);
+        gameFrame.pack();
+        gameFrame.setVisible(true);
+    }
+
+    private class InstructionsButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            createInstructionsScreen();
+        }
+    }
+
+    private class PlayButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            createGameScreen();
+        }
+    }
+
+    private class QuitButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            startFrame.dispose();
+            if (instructionsFrame != null) {
+                instructionsFrame.dispose();
+            }
+            if (gameFrame != null) {
+                gameFrame.dispose();
+            }
+            System.exit(0);
+        }
+    }
+
+    private class BackButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() == instructionsFrame) {
+                instructionsFrame.dispose();
+            } else if (event.getSource() == gameFrame) {
+                gameFrame.dispose();
+            }
+            startFrame.setVisible(true);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new GameIntroduction();
+            }
+        });
+    }
+}
